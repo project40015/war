@@ -1,0 +1,13 @@
+name: DecimatePurge
+version: 1.0
+author: _Ug
+description: DecimatePVP’s purge plugin
+main: decimatepurge.core.Purge
+commands:
+  forcestart:
+    description: Force the game to start
+  factions:
+    description: Default factions command
+    aliases: [f]
+  shout:
+    description: Shout to the server

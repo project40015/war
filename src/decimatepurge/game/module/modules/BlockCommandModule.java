@@ -13,24 +13,24 @@ public class BlockCommandModule extends SimpleEventModule {
 	}
 
 	@EventHandler
-	public void onCommand(PlayerCommandPreprocessEvent event){
-		String command = "";
-		if(event.getMessage().contains(" ")){
+	public void onCommand(PlayerCommandPreprocessEvent event) {
+		String command = event.getMessage();
+		if (command.contains(" ")) {
 			command = event.getMessage().split(" ")[0];
 		}
-		if(command.startsWith("/")){
+		if (command.startsWith("/")) {
 			command = command.substring(1);
 		}
-		if(command.contains(":")){
+		if (command.contains(":")) {
 			event.getPlayer().sendMessage(ChatColor.RED + "You cannot use this.");
 			event.setCancelled(true);
 			return;
 		}
-		if(command.startsWith("me")){
+		if (command.startsWith("me")) {
 			event.getPlayer().sendMessage(ChatColor.RED + "You cannot use this.");
 			event.setCancelled(true);
 			return;
 		}
 	}
-	
+
 }

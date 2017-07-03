@@ -16,62 +16,94 @@ public abstract class GameStage implements Listener {
 	private GameStageID id;
 	private List<Module> loadedModules = new ArrayList<Module>();
 	private ModuleManager moduleManager;
-	
-	public GameStage(String name, GameStageID id){
+
+	public GameStage(String name, GameStageID id) {
 		this.name = name;
 		this.id = id;
 		this.moduleManager = Purge.getInstance().getModuleManager();
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public GameStageID getGameStageID(){
+
+	public GameStageID getGameStageID() {
 		return this.id;
 	}
-	
-	public Module getModule(ModuleID id){
-		for(Module module : loadedModules){
-			if(module.getModuleId() == id){
+
+	public Module getModule(ModuleID id) {
+		for (Module module : loadedModules) {
+			if (module.getModuleId() == id) {
 				return module;
 			}
 		}
 		return null;
 	}
-	
-	protected void startNext(){
+
+	public Module getLoadedModule(ModuleID id) {
+		for (Module module : this.loadedModules) {
+			if (module.getModuleId().equals(id)) {
+				return module;
+			}
+		}
+		return null;
+	}
+
+	public boolean isModuleLoaded(ModuleID id) {
+		for (Module module : this.loadedModules) {
+			if (module.getModuleId().equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected void startNext() {
 		Purge.getInstance().getGameStageManager().startNext();
 	}
-	
-//	protected void addModules(ModuleID... modules){
-//		for(ModuleID module : modules){
-//			this.loadedModules.add(moduleManager.getModule(module));
-//		}
-//	}
-	
-	protected void loadModule(ModuleID moduleID, Object...objects){
+
+	protected void loadModulesNoArguments(ModuleID... modules) {
+		for (ModuleID module : modules) {
+			this.loadModule(module);
+		}
+	}
+
+	protected void loadModule(ModuleID moduleID, Object... objects) {
 		Module module = moduleManager.getModule(moduleID);
 		this.loadedModules.add(module);
-		if(objects != null){
+		if (objects != null) {
 			module.preload(objects);
-		}else{
+		} else {
 			module.preload();
 		}
 	}
+
+	private void replaceModule(Module module){
+		for(int i = 0; i < this.loadedModules.size(); i++){
+			if(this.loadedModules.get(i).getModuleId().equals(module.getModuleId())){
+				this.loadedModules.remove(i);
+				return;
+			}
+		}
+		this.loadedModules.add(module);
+	}
 	
-	public void loadGameStage(){
-		for(Module module : this.loadedModules){
+	public void loadGameStage(List<Module> remainingModules) {
+		for(Module module : remainingModules){
+			replaceModule(module);
+		}
+		for (Module module : this.loadedModules) {
 			module.loadModule();
 		}
 		start();
 	}
-	
-	public List<Module> getLoadedModules(){
+
+	public List<Module> getLoadedModules() {
 		return this.loadedModules;
 	}
-	
-	public abstract void finish(Object...objects);
+
+	public abstract void finish(Object... objects);
+
 	public abstract void start();
-	
+
 }

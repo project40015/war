@@ -11,15 +11,15 @@ public class NoDamageModule extends SimpleEventModule {
 	public NoDamageModule(ModuleID id) {
 		super(id);
 	}
-	
+
 	@EventHandler
-	public void onDamage(EntityDamageEvent event){
+	public void onDamage(EntityDamageEvent event) {
 		event.setCancelled(true);
 	}
 
 	@EventHandler
-	public void onHungerLoss(FoodLevelChangeEvent event){
+	public void onHungerLoss(FoodLevelChangeEvent event) {
 		event.setCancelled(true);
 	}
-	
+
 }

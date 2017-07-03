@@ -1,7 +1,7 @@
-name: DecimatePurge
+name: DecimateFactionWar
 version: 1.0
 author: _Ug
-description: DecimatePVP’s purge plugin
+description: DecimatePVP’s war plugin
 main: decimatepurge.core.Purge
 commands:
   forcestart:
@@ -11,3 +11,7 @@ commands:
     aliases: [f]
   shout:
     description: Shout to the server
+  hub:
+    description: Return to the hub
+  spectate:
+    description: Change to spectate

@@ -13,23 +13,46 @@ import decimatepurge.game.module.ModuleManager.ModuleID;
 
 public class NoConnectionModule extends Module {
 
+	private boolean allowSpectators = false;
+	private String[] allowedSpectators = { "62687bed-fb7b-45b1-ae00-6305f5291172" };
+
 	public NoConnectionModule(ModuleID id) {
 		super(id);
 	}
-	
-	@EventHandler
-	public void onLogin(AsyncPlayerPreLoginEvent event){
-		event.disallow(Result.KICK_OTHER, ChatColor.RED + "Game currently in progress");
+
+	/**
+	 * @return True if users with permission are allowed to join while this
+	 *         module is loaded as spectators.
+	 */
+	public boolean getAllowSpectators() {
+		return allowSpectators;
 	}
-	
-	@Override
-	public void load() {
-		Bukkit.getPluginManager().registerEvents(this, Purge.getInstance());
+
+	@EventHandler
+	public void onLogin(AsyncPlayerPreLoginEvent event) {
+		if (allowSpectators) {
+			for (String str : allowedSpectators) {
+				if (str.equals(event.getUniqueId().toString())) {
+					return;
+				}
+			}
+		}
+		event.disallow(Result.KICK_OTHER, ChatColor.RED + "Game currently in progress");
 	}
 
 	@Override
 	public void unload() {
 		HandlerList.unregisterAll(this);
+	}
+
+	@Override
+	protected void load() {
+		if (super.getArguments().length > 0) {
+			if (super.getArguments()[0] instanceof Boolean) {
+				allowSpectators = (Boolean) super.getArguments()[0];
+			}
+		}
+		Bukkit.getPluginManager().registerEvents(this, Purge.getInstance());
 	}
 
 }

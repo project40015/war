@@ -16,13 +16,13 @@ import decimatepurge.game.module.ModuleManager.ModuleID;
 public class JoinServerModule extends Module {
 
 	ItemStack air = new ItemStack(Material.AIR);
-	
+
 	public JoinServerModule(ModuleID id) {
 		super(id);
 	}
-	
+
 	@EventHandler
-	public void onJoin(PlayerJoinEvent event){
+	public void onJoin(PlayerJoinEvent event) {
 		event.getPlayer().getInventory().clear();
 		event.getPlayer().getInventory().setHelmet(air);
 		event.getPlayer().getInventory().setChestplate(air);

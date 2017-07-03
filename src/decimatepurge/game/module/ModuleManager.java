@@ -18,41 +18,29 @@ import decimatepurge.game.module.modules.QuitServerModule;
 import decimatepurge.game.module.modules.RegularScoreboardInformationModule;
 import decimatepurge.game.module.modules.TeamModule;
 import decimatepurge.game.module.modules.commands.FactionCommandModule;
+import decimatepurge.game.module.modules.commands.HubCommandModule;
 import decimatepurge.game.module.modules.commands.ShoutCommandModule;
+import decimatepurge.game.module.modules.commands.SpectateCommandModule;
 import decimatepurge.game.module.modules.commands.StartGameCommandModule;
 
 public class ModuleManager implements Manager {
-	
+
 	public enum ModuleID {
 
 		// Commands
-		START_GAME_COMMAND_MODULE,
-		FACTION_DEFAULT_COMMAND_MODULE,
-		SHOUT_COMMAND_MODULE,
-		
+		START_GAME_COMMAND_MODULE, FACTION_DEFAULT_COMMAND_MODULE, SHOUT_COMMAND_MODULE, SPECTATE_COMMAND_MODULE, HUB_COMMAND_MODULE,
+
 		// Game mechanics
-		NO_DAMAGE_MODULE,
-		GRIEF_PROTECTION_MODULE,
-		NO_CONNECTION_MODULE,
-		TEAM_MODULE,
-		DEFAULT_CHAT_MODULE,
-		JOIN_SERVER_MODULE,
-		QUIT_SERVER_MODULE,
-		MAP_MODULE,
-		NO_REGENERATION_MODULE,
-		REGULAR_SCOREBOARD_INFORMATION_MODULE,
-		BLOCK_COMMAND_MODULE,
-		DEATH_MESSAGE_MODULE,
-		COMPASS_POINT_MODULE;
+		NO_DAMAGE_MODULE, GRIEF_PROTECTION_MODULE, NO_CONNECTION_MODULE, TEAM_MODULE, DEFAULT_CHAT_MODULE, JOIN_SERVER_MODULE, QUIT_SERVER_MODULE, MAP_MODULE, NO_REGENERATION_MODULE, REGULAR_SCOREBOARD_INFORMATION_MODULE, BLOCK_COMMAND_MODULE, DEATH_MESSAGE_MODULE, COMPASS_POINT_MODULE;
 	}
- 
+
 	private List<Module> modules = new ArrayList<>();
-	
-	public ModuleManager(){
+
+	public ModuleManager() {
 		fillModules();
 	}
-	
-	private void fillModules(){
+
+	private void fillModules() {
 		this.modules.add(new NoDamageModule(ModuleID.NO_DAMAGE_MODULE));
 		this.modules.add(new GriefProtectionModule(ModuleID.GRIEF_PROTECTION_MODULE, ModuleID.NO_DAMAGE_MODULE));
 		this.modules.add(new NoConnectionModule(ModuleID.NO_CONNECTION_MODULE));
@@ -69,11 +57,13 @@ public class ModuleManager implements Manager {
 		this.modules.add(new BlockCommandModule(ModuleID.BLOCK_COMMAND_MODULE));
 		this.modules.add(new DeathMessageModule(ModuleID.DEATH_MESSAGE_MODULE));
 		this.modules.add(new CompassPointModule(ModuleID.COMPASS_POINT_MODULE));
+		this.modules.add(new SpectateCommandModule(ModuleID.SPECTATE_COMMAND_MODULE, "spectate"));
+		this.modules.add(new HubCommandModule(ModuleID.HUB_COMMAND_MODULE, "hub"));
 	}
-	
-	public Module getModule(ModuleID id){
-		for(Module module : modules){
-			if(module.getModuleId() == id){
+
+	public Module getModule(ModuleID id) {
+		for (Module module : modules) {
+			if (module.getModuleId() == id) {
 				return module;
 			}
 		}
@@ -82,7 +72,7 @@ public class ModuleManager implements Manager {
 
 	@Override
 	public void onDisable() {
-		
+
 	}
-	
+
 }

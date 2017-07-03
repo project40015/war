@@ -19,30 +19,36 @@ public abstract class SimpleCommandModule extends Module implements CommandExecu
 		Purge.getInstance().getCommand(command).setExecutor(this);
 		this.command = command;
 	}
-	
-	protected String getCommand(){
+
+	protected String getCommand() {
 		return command;
 	}
-	
-	protected String noPermission(){
+
+	protected String noPermission() {
 		return ChatColor.RED + "You do not have permission to use this command!";
 	}
 
 	public void load() {
 		loaded = true;
+		loadCommand();
 	}
 
 	public void unload() {
 		loaded = false;
+		unloadCommand();
 	}
 
+	public abstract void loadCommand();
+
+	public abstract void unloadCommand();
+
 	public abstract void onSuccessfulCommand(CommandSender sender, Command command, String commandLabel, String[] args);
-	
+
 	@Override
 	public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
-		if(loaded){
+		if (loaded) {
 			onSuccessfulCommand(arg0, arg1, arg2, arg3);
-		}else{
+		} else {
 			arg0.sendMessage(ChatColor.RED + "This command is currently not available.");
 		}
 		return false;

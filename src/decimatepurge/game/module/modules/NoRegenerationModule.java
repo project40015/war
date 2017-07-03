@@ -11,10 +11,10 @@ public class NoRegenerationModule extends SimpleEventModule {
 	public NoRegenerationModule(ModuleID id) {
 		super(id);
 	}
-	
+
 	@EventHandler
-	public void onRegen(EntityRegainHealthEvent event){
-		if(event.getRegainReason().equals(RegainReason.SATIATED)){
+	public void onRegen(EntityRegainHealthEvent event) {
+		if (event.getRegainReason().equals(RegainReason.SATIATED)) {
 			event.setCancelled(true);
 		}
 	}

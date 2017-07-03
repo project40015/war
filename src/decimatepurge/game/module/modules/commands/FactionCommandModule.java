@@ -10,86 +10,167 @@ import org.bukkit.entity.Player;
 
 import decimatepurge.core.Purge;
 import decimatepurge.game.module.ModuleManager.ModuleID;
+import decimatepurge.game.module.modules.objects.Faction;
 import decimatepurge.user.User;
 
 public class FactionCommandModule extends SimplePlayerCommandModule {
+
+	private List<Faction> factions = new ArrayList<Faction>();
 
 	public FactionCommandModule(ModuleID id, String command) {
 		super(id, command);
 	}
 
-	private void listCommands(Player player){
-		player.sendMessage(ChatColor.RED + "Faction War" + ChatColor.GRAY + ":");
-		send(player, "(show/who) [faction]", "List the players of a faction");
+	private Faction getFaction(String name) {
+		for (Faction faction : factions) {
+			if (faction.getName().equalsIgnoreCase(name)) {
+				return faction;
+			}
+		}
+		return null;
+	}
+
+	public void leave(User user) {
+		Faction faction = this.getFaction(user.getFaction());
+		this.getFaction(user.getFaction()).removeUser(user);
+		if (faction.isEmpty()) {
+			this.factions.remove(faction);
+		}
+	}
+
+	private void changeFaction(User user, String factionTag) {
+		if (!user.getFaction().equals("")) {
+			Faction old = getFaction(user.getFaction());
+			if (old != null) {
+				old.removeUser(user);
+				if (old.isEmpty()) {
+					this.factions.remove(old);
+				}
+			}
+		}
+		Faction faction = getFaction(factionTag);
+		if (faction != null) {
+			faction.addUser(user);
+			user.setFaction(faction.getName());
+		} else {
+			if (!factionTag.equals("")) {
+				this.factions.add(new Faction(factionTag, user));
+			}
+			user.setFaction(factionTag);
+		}
 
 	}
-	
-	private void send(Player player, String command, String description){
-		player.sendMessage(ChatColor.RED + "/" + super.getCommand() + " " + command + ChatColor.GRAY + " - " + description);
+
+	private void listCommands(Player player) {
+		player.sendMessage(ChatColor.RED + "Faction War" + ChatColor.GRAY + ":");
+		send(player, "(show/who) [faction]", "List the players of a faction");
+		send(player, "list", "List all online factions");
 	}
-	
-	private void displayFaction(Player player, String tag, boolean self){
-		if(!self){
-			try{
+
+	private void send(Player player, String command, String description) {
+		player.sendMessage(
+				ChatColor.RED + "/" + super.getCommand() + " " + command + ChatColor.GRAY + " - " + description);
+	}
+
+	private void displayFaction(Player player, String tag, boolean self) {
+		if (!self) {
+			try {
 				Player p = Bukkit.getServer().getPlayer(tag);
 				tag = Purge.getInstance().getUserManager().getUser(p).getFaction();
-			}catch(Exception ex){ }
+			} catch (Exception ex) {
+			}
 		}
-		if(tag.equals("")){
+		if (tag.equals("")) {
 			player.sendMessage(ChatColor.RED + "User is not playing with a faction.");
 			return;
 		}
 		List<User> users = new ArrayList<>();
-		for(User user : Purge.getInstance().getUserManager().getUsers()){
-			if(user.isOnline() && !user.isDead() && user.getFaction().equalsIgnoreCase(tag)){
+		for (User user : Purge.getInstance().getUserManager().getUsers()) {
+			if (user.isOnline() && !user.isDead() && user.getFaction().equalsIgnoreCase(tag)) {
 				users.add(user);
 			}
 		}
-		if(users.size() == 0){
+		if (users.size() == 0) {
 			player.sendMessage(ChatColor.RED + "Faction not found.");
 			return;
 		}
-		player.sendMessage(ChatColor.GRAY + "Displaying [" + ChatColor.RED + tag + ChatColor.GRAY + "] (" + users.size() + "):");
+		player.sendMessage(
+				ChatColor.GRAY + "Displaying [" + ChatColor.RED + tag + ChatColor.GRAY + "] (" + users.size() + "):");
 		String online = "";
-		for(int i = 0; i < users.size(); i++){
-			online += ChatColor.GRAY + users.get(i).getPlayer().getName() + ChatColor.YELLOW + " (" + (int)player.getHealth() + ")";
-			if(i != users.size() - 1){
+		for (int i = 0; i < users.size(); i++) {
+			online += ChatColor.GRAY + users.get(i).getPlayer().getName() + ChatColor.YELLOW + " ("
+					+ (int) player.getHealth() + ")";
+			if (i != users.size() - 1) {
 				online += ChatColor.GRAY + ", ";
-			}else{
+			} else {
 				online += ChatColor.GRAY + ".";
 			}
 		}
 		player.sendMessage(online);
 	}
 
+	private void displayFactionList(Player player) {
+		player.sendMessage(ChatColor.GRAY + "Online Factions:");
+		int solo = 0;
+		for (User user : Purge.getInstance().getUserManager().getUsers()) {
+			if (user.getFaction().equals("") && user.isOnline()) {
+				solo++;
+			}
+		}
+		player.sendMessage(ChatColor.YELLOW + "Solo players" + ChatColor.GRAY + ": " + ChatColor.RED + solo);
+		for (int i = 0; i < (factions.size() >= 10 ? 10 : factions.size()); i++) {
+			if (factions.get(i).getAliveSize() >= 0) {
+				player.sendMessage(ChatColor.RED + factions.get(i).getColoredName(player) + ChatColor.GRAY + ": "
+						+ ChatColor.RED + factions.get(i).getAliveSize());
+			}
+		}
+	}
+
 	@Override
 	protected void onCommand(Player player, Command command, String[] args) {
 		User user = Purge.getInstance().getUserManager().getUser(player);
-		if(args.length == 0){
+		if (args.length == 0) {
 			listCommands(player);
 			return;
 		}
-		if(args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("who")){
-			if(args.length == 1){
+		if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("who")) {
+			if (args.length == 1) {
 				displayFaction(player, user.getFaction(), true);
-			}else{
+			} else {
 				displayFaction(player, args[1], false);
 			}
 			return;
 		}
-		if(args[0].equalsIgnoreCase("change")){
-			if(player.isOp()){
-				if(args.length >= 2){
-					user.setFaction(args[1]);
-				}else{
+		if (args[0].equalsIgnoreCase("list")) {
+			displayFactionList(player);
+			return;
+		}
+		if (args[0].equalsIgnoreCase("change")) {
+			if (player.isOp()) {
+				if (args.length >= 2) {
+					this.changeFaction(user, args[1]);
+					player.sendMessage(ChatColor.YELLOW + "Changed your faction.");
+				} else {
 					player.sendMessage(ChatColor.RED + "Invalid syntax, try /f change (tag)");
 				}
-			}else{
+			} else {
 				player.sendMessage(super.noPermission());
 			}
 			return;
-		}		
+		}
 	}
-	
+
+	@Override
+	public void loadCommand() {
+		// Appears redundant, but this is necessary for loading faction wrappers
+		for (User user : Purge.getInstance().getUserManager().getUsers()) {
+			this.changeFaction(user, user.getFaction());
+		}
+	}
+
+	@Override
+	public void unloadCommand() {
+		this.factions.clear();
+	}
 
 }

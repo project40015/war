@@ -9,134 +9,157 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import decimatepurge.core.Purge;
+import decimatepurge.game.module.modules.TeamModule;
 import decimatepurge.user.User;
 
 public class Team {
 
+	private List<String> scores = new ArrayList<>();
 	private List<User> members = new ArrayList<>();
 	private boolean dead;
 	private String name;
 	private Scoreboard scoreboard;
 	private org.bukkit.scoreboard.Team scoreboardTeam;
 	private Objective objective;
-	
-	public Team(List<User> users, String name){
+	private TeamModule module;
+
+	public Team(TeamModule module, List<User> users, String name) {
+		this.module = module;
 		members.addAll(users);
 		this.name = name;
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public void load(){
+	public void load() {
 		scoreboard = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
-		
+
 		scoreboardTeam = scoreboard.registerNewTeam(name);
 
-		if(name.equals("")){
+		if (!name.equals("")) {
 			scoreboardTeam.setPrefix(ChatColor.GRAY + "[" + name + "] " + ChatColor.GREEN.toString());
-		}else{
+		} else {
 			scoreboardTeam.setPrefix(ChatColor.GREEN.toString());
 		}
 		scoreboardTeam.setCanSeeFriendlyInvisibles(true);
 		scoreboardTeam.setAllowFriendlyFire(false);
 		scoreboardTeam.setNameTagVisibility(NameTagVisibility.HIDE_FOR_OTHER_TEAMS);
-		
+
 		org.bukkit.scoreboard.Team enemyTeam = scoreboard.registerNewTeam("enemy");
 		enemyTeam.setPrefix(ChatColor.RED.toString());
 		enemyTeam.setNameTagVisibility(NameTagVisibility.HIDE_FOR_OTHER_TEAMS);
 		loadSideBoard();
-		for(User user : Purge.getInstance().getUserManager().getUsers()){
-			if(user.isOnline()){
-				if(members.contains(user)){
+		for (User user : Purge.getInstance().getUserManager().getUsers()) {
+			if (user.isOnline()) {
+				if (members.contains(user)) {
 					user.getPlayer().setScoreboard(scoreboard);
 					scoreboardTeam.addPlayer(user.getPlayer());
-				}else{
+				} else {
 					enemyTeam.addPlayer(user.getPlayer());
 				}
 			}
 		}
 	}
-	
-	public void addUser(User user){
+
+	public void addUser(User user) {
 		this.members.add(user);
 	}
-	
-	public List<User> getAliveMembers(){
+
+	public List<User> getAliveMembers() {
 		List<User> result = new ArrayList<User>();
-		for(User user : members){
-			if(user.isOnline() && !user.isDead()){
+		for (User user : members) {
+			if (user.isOnline() && !user.isDead()) {
 				result.add(user);
 			}
 		}
 		return result;
 	}
-	
-	private void updateObjective(){
-		for(Score score : scoreboard.getScores("Scoreboard")){
-			scoreboard.resetScores(score.getEntry());
+
+	public void updateObjective(boolean firstLoad) {
+		if (dead) {
+			return;
+		}
+		for (String score : scores) {
+			scoreboard.resetScores(score);
 		}
 		int n = 15;
-		objective.getScore(" ").setScore(--n);
-		objective.getScore(ChatColor.GRAY + "Faction:").setScore(--n);
-		objective.getScore(ChatColor.RED + name).setScore(--n);
-		objective.getScore("  ").setScore(--n);
-		objective.getScore(ChatColor.GRAY + "Members:").setScore(--n);
-		if(getAliveMembers().size() > 3){
-			objective.getScore(ChatColor.RED.toString() + members.size()).setScore(--n);
-		}else{
-			for(User user : getAliveMembers()){
-				objective.getScore(ChatColor.RED + user.getPlayer().getName()).setScore(--n);
+		addScore(" ", --n, firstLoad);
+		addScore(ChatColor.GRAY + "Faction:", --n, firstLoad);
+		addScore(ChatColor.RED + (name.equals("") ? "-" : name), --n, firstLoad);
+		addScore("  ", --n, firstLoad);
+		addScore(ChatColor.GRAY + "Members:", --n, firstLoad);
+		if (getAliveMembers().size() > 3) {
+			addLoadingScore(ChatColor.RED.toString() + getAliveMembers().size(), --n);
+		} else {
+			for (User user : getAliveMembers()) {
+				addLoadingScore(ChatColor.RED + user.getPlayer().getName(), --n);
 			}
 		}
-		objective.getScore("   ").setScore(--n);
-		objective.getScore(ChatColor.GRAY.toString() + ChatColor.ITALIC + "decimatepvp").setScore(--n);
+		addScore("   ", --n, firstLoad);
+		addScore(ChatColor.GRAY + "Factions:", --n, firstLoad);
+		addLoadingScore(ChatColor.RED.toString() + module.getAliveTeams().size(), --n);
+		addScore("    ", --n, firstLoad);
+		addScore(ChatColor.GRAY.toString() + ChatColor.ITALIC + "decimatepvp", --n, firstLoad);
 	}
-	
-	private void loadSideBoard(){
+
+	private void addLoadingScore(String score, int number) {
+		this.scores.add(score);
+		objective.getScore(score).setScore(number);
+	}
+
+	private void addScore(String score, int number, boolean firstLoad) {
+		if (firstLoad) {
+			objective.getScore(score).setScore(number);
+		}
+	}
+
+	private void loadSideBoard() {
 		objective = scoreboard.registerNewObjective("Scoreboard", "dummy");
 		objective.setDisplayName(ChatColor.RED + "Faction War");
 
-		updateObjective();
-		
+		updateObjective(true);
+
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 	}
-	
-	public org.bukkit.scoreboard.Team getScoreboardTeam(){
+
+	public org.bukkit.scoreboard.Team getScoreboardTeam() {
 		return this.scoreboardTeam;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public boolean isOut(){
+
+	public boolean isOut() {
 		return dead;
 	}
-	
-	public void recalc(){
-		this.updateObjective();
-		for(User user : members){
-			if(!user.isDead()){
-				return;
+
+	public void recalc() {
+		this.updateObjective(false);
+		boolean dead = true;
+		for (User user : members) {
+			if (!user.isDead()) {
+				dead = false;
+			} else if (user.isOnline()) {
+				user.getPlayer().setScoreboard(Bukkit.getServer().getScoreboardManager().getNewScoreboard());
 			}
 		}
-		dead = true;
+		this.dead = dead;
 	}
-	
-	public List<User> getUsers(){
+
+	public List<User> getUsers() {
 		return members;
 	}
-	
-	public boolean containsPlayer(Player player){
-		for(User user : members){
-			if(user.getPlayer().equals(player)){
+
+	public boolean containsPlayer(Player player) {
+		for (User user : members) {
+			if (user.getPlayer().equals(player)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 }

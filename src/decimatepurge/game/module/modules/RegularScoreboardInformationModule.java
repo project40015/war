@@ -22,17 +22,17 @@ public class RegularScoreboardInformationModule extends Module {
 	private long start;
 	private final String boardName = ChatColor.RED + "Faction War";
 	private Objective objective;
-	
+
 	private String o = "", t = "";
-	
+
 	Score startScore, onlineScore;
-	
+
 	public RegularScoreboardInformationModule(ModuleID id) {
 		super(id);
 	}
-	
-	public void update(boolean first){
-		if(!first){
+
+	public void update(boolean first) {
+		if (!first) {
 			board.resetScores(t);
 			board.resetScores(o);
 			t = ChatColor.RED + (start == 0 ? "N/A" : TimeFormatUtils.getTimeFormattedMinutesSeconds(start, "now"));
@@ -57,28 +57,28 @@ public class RegularScoreboardInformationModule extends Module {
 		onlineScore.setScore(--i); // 2
 		objective.getScore("  ").setScore(--i); // 1
 		objective.getScore(ChatColor.GRAY.toString() + ChatColor.ITALIC + "decimatepvp").setScore(--i); // 0
-		
+
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 	}
 
 	@EventHandler
-	public void onJoin(PlayerJoinEvent event){
+	public void onJoin(PlayerJoinEvent event) {
 		event.getPlayer().setScoreboard(board);
 	}
-	
+
 	@Override
 	protected void load() {
-		
-		if(super.getArguments().length > 0 && super.getArguments()[0] instanceof Long){
+
+		if (super.getArguments().length > 0 && super.getArguments()[0] instanceof Long) {
 			start = (long) super.getArguments()[0];
 		}
-				
+
 		update(true);
-		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 			player.setScoreboard(board);
 		}
 
-		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 			player.setScoreboard(board);
 		}
 		Bukkit.getPluginManager().registerEvents(this, Purge.getInstance());
@@ -87,9 +87,9 @@ public class RegularScoreboardInformationModule extends Module {
 	@Override
 	protected void unload() {
 		HandlerList.unregisterAll(this);
-		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 			player.setScoreboard(Bukkit.getServer().getScoreboardManager().getNewScoreboard());
 		}
 	}
-	
+
 }

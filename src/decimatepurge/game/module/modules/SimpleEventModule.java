@@ -9,10 +9,10 @@ import decimatepurge.game.module.ModuleManager.ModuleID;
 
 public abstract class SimpleEventModule extends Module {
 
-	public SimpleEventModule(ModuleID id, ModuleID...modules) {
+	public SimpleEventModule(ModuleID id, ModuleID... modules) {
 		super(id, modules);
 	}
-	
+
 	public SimpleEventModule(ModuleID id) {
 		super(id);
 	}

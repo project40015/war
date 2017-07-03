@@ -14,12 +14,12 @@ public abstract class SimplePlayerCommandModule extends SimpleCommandModule {
 	}
 
 	protected abstract void onCommand(Player player, Command command, String[] args);
-	
+
 	@Override
 	public void onSuccessfulCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
-		if(arg0 instanceof Player){
+		if (arg0 instanceof Player) {
 			onCommand((Player) arg0, arg1, arg3);
-		}else{
+		} else {
 			arg0.sendMessage(ChatColor.RED + "You must be a player to use this command.");
 		}
 	}

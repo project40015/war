@@ -11,46 +11,57 @@ public abstract class Module implements Listener {
 	private Object[] arguments;
 	private ModuleID[] modules;
 	private ModuleManager manager;
-	
-	public Module(ModuleID id, ModuleID... modules){
+	private boolean loaded;
+
+	public Module(ModuleID id, ModuleID... modules) {
 		this.id = id;
 		this.modules = modules;
 	}
-	
-	public ModuleID getModuleId(){
+
+	public ModuleID getModuleId() {
 		return id;
 	}
-	
-	protected Object[] getArguments(){
+
+	protected Object[] getArguments() {
 		return arguments;
 	}
-	
-	public void preload(Object...arguments){
+
+	public void preload(Object... arguments) {
 		this.arguments = arguments;
 	}
-	
-	public void loadModule(){
-		if(manager == null){
+
+	public void loadModule() {
+		if(loaded){
+			return;
+		}
+		loaded = true;
+		if (manager == null) {
 			manager = Purge.getInstance().getModuleManager();
 		}
-		if(modules != null && modules.length != 0){
-			for(ModuleID module : modules){
+		if (modules != null && modules.length != 0) {
+			for (ModuleID module : modules) {
 				manager.getModule(module).loadModule();
 			}
 		}
 		load();
 	}
+
+	public boolean isLoaded(){
+		return loaded;
+	}
 	
-	public void unloadModule(){
-		if(modules != null && modules.length != 0){
-			for(ModuleID module : modules){
+	public void unloadModule() {
+		loaded = false;
+		if (modules != null && modules.length != 0) {
+			for (ModuleID module : modules) {
 				manager.getModule(module).unloadModule();
 			}
 		}
 		unload();
 	}
-	
+
 	protected abstract void load();
+
 	protected abstract void unload();
-	
+
 }

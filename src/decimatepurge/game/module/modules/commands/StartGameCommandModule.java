@@ -15,12 +15,22 @@ public class StartGameCommandModule extends SimpleCommandModule {
 
 	@Override
 	public void onSuccessfulCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
-		if(arg0.isOp()){
+		if (arg0.isOp()) {
 			arg0.sendMessage(ChatColor.BLUE + "Starting the game...");
 			Purge.getInstance().getGameStageManager().getCurrentStage().finish();
-		}else{
+		} else {
 			arg0.sendMessage(super.noPermission());
 		}
+	}
+
+	@Override
+	public void loadCommand() {
+
+	}
+
+	@Override
+	public void unloadCommand() {
+
 	}
 
 }

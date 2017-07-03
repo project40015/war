@@ -15,31 +15,42 @@ import decimatepurge.user.User;
 public class ShoutCommandModule extends SimplePlayerCommandModule {
 
 	private List<String> shouted = new ArrayList<String>();
-	
+
 	public ShoutCommandModule(ModuleID id, String command) {
 		super(id, command);
 	}
 
 	@Override
 	protected void onCommand(Player player, Command command, String[] args) {
-		if(args.length == 0){
+		if (args.length == 0) {
 			player.sendMessage(ChatColor.RED + "Invalid syntax, try /" + super.getCommand() + " (message)");
 		}
-		if(!shouted.contains(player.getUniqueId().toString())){
+		if (!shouted.contains(player.getUniqueId().toString())) {
 			User user = Purge.getInstance().getUserManager().getUser(player);
-			if(user.isDead()){
+			if (user.isDead()) {
 				player.sendMessage(ChatColor.RED + "You must be alive to use this command.");
 				return;
 			}
 			String message = "";
-			for(int i = 1; i < args.length; i++){
+			for (int i = 0; i < args.length; i++) {
 				message += args[i] + " ";
 			}
-			Bukkit.broadcastMessage(ChatColor.GOLD + "[SHOUT] " + ChatColor.WHITE + "[" + user.getFaction() + "] " + player.getName() + ChatColor.GRAY + ": " + message.trim());
+			Bukkit.broadcastMessage(ChatColor.GOLD + "[SHOUT] " + ChatColor.WHITE + "[" + user.getFaction() + "] "
+					+ player.getName() + ChatColor.GRAY + ": " + message.trim());
 			shouted.add(player.getUniqueId().toString());
-		}else{
+		} else {
 			player.sendMessage(ChatColor.RED + "You have already shouted this game.");
 		}
 	}
-	
+
+	@Override
+	public void loadCommand() {
+
+	}
+
+	@Override
+	public void unloadCommand() {
+
+	}
+
 }

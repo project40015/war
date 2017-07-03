@@ -16,12 +16,12 @@ public class DefaultChatModule extends Module {
 	public DefaultChatModule(ModuleID id) {
 		super(id);
 	}
-	
+
 	@EventHandler
-	public void onChat(AsyncPlayerChatEvent event){
+	public void onChat(AsyncPlayerChatEvent event) {
 		String format = ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.GRAY + ": " + event.getMessage();
 		User user = Purge.getInstance().getUserManager().getUser(event.getPlayer());
-		if(!user.getFaction().equals("")){
+		if (!user.getFaction().equals("")) {
 			format = ChatColor.GRAY + "[" + user.getFaction() + "] " + format;
 		}
 		event.setFormat(format);
@@ -37,5 +37,4 @@ public class DefaultChatModule extends Module {
 		HandlerList.unregisterAll(this);
 	}
 
-	
 }

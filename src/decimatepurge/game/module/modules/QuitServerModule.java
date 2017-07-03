@@ -10,13 +10,13 @@ import decimatepurge.game.module.Module;
 import decimatepurge.game.module.ModuleManager.ModuleID;
 
 public class QuitServerModule extends Module {
-	
+
 	public QuitServerModule(ModuleID id) {
 		super(id);
 	}
-	
+
 	@EventHandler
-	public void onQuit(PlayerQuitEvent event){
+	public void onQuit(PlayerQuitEvent event) {
 		event.setQuitMessage("");
 	}
 

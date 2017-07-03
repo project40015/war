@@ -15,161 +15,158 @@ import org.bukkit.scoreboard.Scoreboard;
 import decimatepurge.core.Purge;
 import decimatepurge.game.module.Module;
 import decimatepurge.game.module.ModuleManager.ModuleID;
- import decimatepurge.game.module.modules.objects.Team;
+import decimatepurge.game.module.modules.objects.Team;
 import decimatepurge.user.User;
 
 public class TeamModule extends Module {
-	
+
 	private Scoreboard scoreboard;
-	
+
 	private List<Team> teams = new ArrayList<>();
-//	private int teamSize = 2;
-	
-	public TeamModule(ModuleID id){
+	private int teamChecker;
+
+	public TeamModule(ModuleID id) {
 		super(id);
 		scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 	}
-	
-	public boolean isTeam(String tag){
-		for(Team team : teams){
-			if(team.getName().equalsIgnoreCase(tag)){
+
+	public boolean isTeam(String tag) {
+		for (Team team : teams) {
+			if (team.getName().equalsIgnoreCase(tag)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	public Team getTeam(String tag){
-		for(Team team : teams){
-			if(team.getName().equalsIgnoreCase(tag)){
+
+	public Team getTeam(String tag) {
+		for (Team team : teams) {
+			if (team.getName().equalsIgnoreCase(tag)) {
 				return team;
 			}
 		}
 		return null;
 	}
-	
-	private void split(List<User> users, int index){
-		if(index == users.size()){
-			for(Team team : this.teams){
+
+	private void split(List<User> users, int index) {
+		if (index == users.size()) {
+			for (Team team : this.teams) {
 				team.load();
 			}
 			return;
 		}
-		if(users.get(index).getFaction().equals("")){
-			teams.add(new Team(Arrays.asList(users.get(index)), ""));
-		}else if(isTeam(users.get(index).getFaction())){
+		if (users.get(index).getFaction().equals("")) {
+			teams.add(new Team(this, Arrays.asList(users.get(index)), ""));
+		} else if (isTeam(users.get(index).getFaction())) {
 			getTeam(users.get(index).getFaction()).addUser(users.get(index));
-		}else{
-			teams.add(new Team(Arrays.asList(users.get(index)), users.get(index).getFaction()));
+		} else {
+			teams.add(new Team(this, Arrays.asList(users.get(index)), users.get(index).getFaction()));
 		}
 		split(users, index + 1);
 	}
-	
-	private void split(List<User> users){
+
+	private void split(List<User> users) {
 		split(users, 0);
 	}
-	
-//	private void split(List<User> users, int index){
-//		if(users.size() == 0){
-//			return;
-//		}
-//		if(users.size() <= index + teamSize){
-//			List<User> members = new ArrayList<>();
-//			for(int i = index; i < users.size(); i++){
-//				members.add(users.get(i));
-//			}
-//			teams.add(new Team(this, members, index + ""));
-//			return;
-//		}
-//		List<User> members = new ArrayList<>();
-//		for(int q = index; q < index + teamSize; q++){
-//			members.add(users.get(q));
-//		}
-//		teams.add(new Team(this, members, index + ""));
-//		
-//		split(users, index + teamSize);
-//	}
-	
-	public boolean areOnSameTeam(Player...players){
-		teamLoop: for(Team team : teams){
-			for(int p = 0; p < players.length; p++){
-				if(!team.containsPlayer(players[p])){
-					if(p == 0){
+
+	public boolean areOnSameTeam(Player... players) {
+		teamLoop: for (Team team : teams) {
+			for (int p = 0; p < players.length; p++) {
+				if (!team.containsPlayer(players[p])) {
+					if (p == 0) {
 						continue teamLoop;
-					}else{
+					} else {
 						return false;
 					}
 				}
-				if(p == players.length - 1){
+				if (p == players.length - 1) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
-	public Team getTeam(User user){
-		for(Team team : teams){
-			if(team.getUsers().contains(user)){
+
+	public Team getTeam(User user) {
+		for (Team team : teams) {
+			if (team.getUsers().contains(user)) {
 				return team;
 			}
 		}
 		return null;
 	}
-	
-	public Team getTeam(Player player){
-		for(Team team : teams){
-			for(User user : team.getUsers()){
-				if(user.getPlayer().equals(player)){
+
+	public Team getTeam(Player player) {
+		for (Team team : teams) {
+			for (User user : team.getUsers()) {
+				if (user.getPlayer().equals(player)) {
 					return team;
 				}
 			}
 		}
 		return null;
 	}
-	
-	public List<Team> getTeams(){
+
+	public List<Team> getTeams() {
 		return teams;
 	}
-	
+
+	public List<Team> getAliveTeams() {
+		List<Team> alive = new ArrayList<>();
+		for (Team team : teams) {
+			if (!team.isOut()) {
+				alive.add(team);
+			}
+		}
+		return alive;
+	}
+
+	private void startTeamChecker() {
+		teamChecker = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Purge.getInstance(), new Runnable() {
+
+			@Override
+			public void run() {
+				for (Team team : getAliveTeams()) {
+					team.updateObjective(false);
+				}
+			}
+
+		}, 20, 20);
+	}
+
 	@EventHandler
-	public void onChat(AsyncPlayerChatEvent event){
-		for(User user : getTeam(event.getPlayer()).getAliveMembers()){
-			user.getPlayer().sendMessage(ChatColor.BLUE + "(FACTION) " + event.getPlayer().getName() + ChatColor.GRAY + ": " + event.getMessage());
+	public void onChat(AsyncPlayerChatEvent event) {
+		for (User user : getTeam(event.getPlayer()).getAliveMembers()) {
+			user.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "(TEAM) " + event.getPlayer().getName()
+					+ ChatColor.GRAY + ": " + event.getMessage());
 		}
 		event.setCancelled(true);
 	}
-	
-//	@EventHandler
-//	public void onDamage(EntityDamageByEntityEvent event){
-//		if(event.getEntity() instanceof Player && event.getDamager() instanceof Player){
-//			if(areOnSameTeam((Player) event.getEntity(), (Player) event.getDamager())){
-//				event.setCancelled(true);
-//			}
-//		}
-//	}
-	
-	public Scoreboard getScoreboard(){
+
+	public Scoreboard getScoreboard() {
 		return this.scoreboard;
 	}
-	
-	private void createTeams(){
+
+	private void createTeams() {
 		teams.clear();
 		split(Purge.getInstance().getUserManager().getUsers());
 	}
-	
+
 	@Override
 	public void load() {
-//		if(super.getArguments().length > 0 && super.getArguments()[0] instanceof Integer){
-//			teamSize = (Integer) super.getArguments()[0];
-//		}
 		Bukkit.getPluginManager().registerEvents(this, Purge.getInstance());
 		this.createTeams();
+		startTeamChecker();
 	}
 
 	@Override
 	public void unload() {
 		HandlerList.unregisterAll(this);
+		Bukkit.getServer().getScheduler().cancelTask(this.teamChecker);
+
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+			player.setScoreboard(Bukkit.getServer().getScoreboardManager().getNewScoreboard());
+		}
 	}
-	
+
 }

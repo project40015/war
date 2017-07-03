@@ -17,24 +17,24 @@ public class GriefProtectionModule extends Module {
 	public GriefProtectionModule(ModuleID id, ModuleID... modules) {
 		super(id, modules);
 	}
-	
+
 	@EventHandler
-	public void onPlace(BlockPlaceEvent event){
+	public void onPlace(BlockPlaceEvent event) {
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
-	public void onBreak(BlockBreakEvent event){
+	public void onBreak(BlockBreakEvent event) {
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
-	public void onDrop(PlayerDropItemEvent event){
+	public void onDrop(PlayerDropItemEvent event) {
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
-	public void onPickup(PlayerPickupItemEvent event){
+	public void onPickup(PlayerPickupItemEvent event) {
 		event.setCancelled(true);
 	}
 

@@ -32,6 +32,10 @@ public class Purge extends JavaPlugin {
 		}
 	}
 
+	public String getServerID(){
+		return "test";
+	}
+	
 	public void shutdown() {
 		System.out.println("Preparing to shutdown faction war");
 		Bukkit.getServer().shutdown();

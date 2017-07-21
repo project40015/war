@@ -30,7 +30,7 @@ public class GameStageManager implements Manager {
 	}
 
 	private void start() {
-		stages[0].loadGameStage();
+		stages[0].loadGameStage(new ArrayList<>());
 	}
 
 	public void startNext() {

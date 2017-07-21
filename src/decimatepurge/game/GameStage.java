@@ -78,20 +78,21 @@ public abstract class GameStage implements Listener {
 		}
 	}
 
-	private void replaceModule(Module module){
-		for(int i = 0; i < this.loadedModules.size(); i++){
-			if(this.loadedModules.get(i).getModuleId().equals(module.getModuleId())){
-				this.loadedModules.remove(i);
-				return;
+	private void replaceAllModules(List<Module> modules){
+		List<Module> removable = new ArrayList<>();
+		moduleLoop: for(Module module : modules) {
+			for(int i = 0; i < this.loadedModules.size(); i++){
+				if(this.loadedModules.get(i).getModuleId().equals(module.getModuleId())){
+					removable.add(loadedModules.get(i));
+					continue moduleLoop;
+				}
 			}
 		}
-		this.loadedModules.add(module);
+		removable.forEach(m -> this.loadedModules.remove(m));
 	}
 	
 	public void loadGameStage(List<Module> remainingModules) {
-		for(Module module : remainingModules){
-			replaceModule(module);
-		}
+		replaceAllModules(remainingModules);
 		for (Module module : this.loadedModules) {
 			module.loadModule();
 		}

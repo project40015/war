@@ -12,6 +12,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 public class User {
 
 	private Player player;
+	private Rank rank;
 	private boolean dead = false;
 	private String faction = "";
 	private boolean spectating = false;
@@ -31,6 +32,7 @@ public class User {
 	 *            String representing the name of the user's faction, should
 	 *            only be used to determine the team the user is placed into
 	 */
+	@Deprecated
 	public User(Player player, String faction) {
 		this.player = player;
 		this.faction = faction;
@@ -50,6 +52,21 @@ public class User {
 	public User(Player player) {
 		this.player = player;
 		setSpectating();
+	}
+	
+	/**
+	 * <h1>Load a loading user</h1>
+	 * 
+	 * <p>
+	 * Loads a user object when a user requests to join. The player
+	 * will be filled in later. This is the constructor to use.
+	 * </p>
+	 * 
+	 * @param player
+	 *            Player to place as spectator
+	 */
+	public User(String uuid){
+		
 	}
 
 	/**
@@ -108,6 +125,14 @@ public class User {
 	public String getFaction() {
 		return faction;
 	}
+	
+	public void loadRank(Rank rank){
+		this.rank = rank;
+	}
+	
+	public void loadPlayer(Player player){
+		this.player = player;
+	}
 
 	public boolean isSpectating() {
 		return spectating;
@@ -119,6 +144,10 @@ public class User {
 
 	public void setDead() {
 		dead = true;
+	}
+	
+	public Rank getRank(){
+		return rank;
 	}
 
 	public boolean isDead() {

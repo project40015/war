@@ -3,8 +3,11 @@ package decimatepurge.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -45,10 +48,10 @@ public class UserManager implements Manager {
 		return addUser(id);
 	}
 	
-	public User getUserByUUID(String id){
+	public User getUserByUUID(String id, boolean offlineCheck){
 		for(User user : users){
-			if(user.isOnline() && !user.isOff()){
-				if(user.getPlayer().getUniqueId().toString().equalsIgnoreCase(id)){
+			if(!offlineCheck || (user.isOnline() && !user.isOff())){
+				if(user.getUniqueId().equalsIgnoreCase(id)){
 					return user;
 				}
 			}
@@ -57,7 +60,7 @@ public class UserManager implements Manager {
 	}
 
 	public void removeUser(String uuid) {
-		User user = getUserByUUID(uuid);
+		User user = getUserByUUID(uuid, false);
 		if (user != null) {
 			if (users.contains(user)) {
 				users.remove(user);
@@ -77,7 +80,7 @@ public class UserManager implements Manager {
 
 	public User getUser(Player player) {
 		for (User user : users) {
-			if (user.getPlayer().getUniqueId().toString().equals(player.getUniqueId().toString())) {
+			if (user.getUniqueId().equals(player.getUniqueId().toString())) {
 				return user;
 			}
 		}
@@ -86,16 +89,23 @@ public class UserManager implements Manager {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		getUserByUUID(event.getPlayer().getUniqueId().toString()).loadPlayer(event.getPlayer());
+		getUserByUUID(event.getPlayer().getUniqueId().toString(), false).loadPlayer(event.getPlayer());
+	}
+	
+	@EventHandler
+	public void onPreLogin(AsyncPlayerPreLoginEvent event){
+		if(getUserByUUID(event.getUniqueId().toString(), false) == null){
+			event.disallow(Result.KICK_OTHER, ChatColor.RED + "You may not join this server directly.");
+		}
 	}
 	
 	private void requestUser(User user){
-		WarSocket.getInstance().emitServerInformationPacketRequest(user.getPlayer().getUniqueId().toString());
+		WarSocket.getInstance().emitServerInformationPacketRequest(user.getUniqueId());
 	}
 	
 	@EventHandler
 	public void onResult(ServerInformationPacketResultEvent event){
-		User user = Purge.getInstance().getUserManager().getUserByUUID(event.getUUID()); 
+		User user = this.addUser(event.getUUID());
 		user.setFaction(event.getFaction());
 		Rank rank = Rank.valueOf(event.getRank());
 		user.loadRank(rank == null ? Rank.DEFAULT : rank);

@@ -19,8 +19,8 @@ public class DefaultChatModule extends Module {
 
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
-		String format = ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.GRAY + ": " + event.getMessage();
 		User user = Purge.getInstance().getUserManager().getUser(event.getPlayer());
+		String format = ChatColor.YELLOW + user.getFullName() + ChatColor.GRAY + ": " + event.getMessage();
 		if (!user.getFaction().equals("")) {
 			format = ChatColor.GRAY + "[" + user.getFaction() + "] " + format;
 		}

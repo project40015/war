@@ -5,10 +5,11 @@ import org.bukkit.ChatColor;
 public enum Rank {
 
 	OWNER(ChatColor.RED + "[OWNER] "),
+	DEVELOPER(ChatColor.RED + "[DEV] "),
 	MODERATOR(ChatColor.GOLD + "[MOD] "),
 	HELPER(ChatColor.YELLOW + "[HELPER] "),
 	YOUTUBER(ChatColor.GOLD + "[YT] "),
-	DEFAULT(ChatColor.GRAY.toString());
+	DEFAULT(ChatColor.WHITE.toString());
 	
 	private String display;
 	

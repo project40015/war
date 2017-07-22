@@ -17,6 +17,7 @@ public class User {
 	private String faction = "";
 	private boolean spectating = false;
 	private boolean off = false;
+	private String uuid;
 
 	/**
 	 * <h1>Load a user object</h1>
@@ -66,7 +67,7 @@ public class User {
 	 *            Player to place as spectator
 	 */
 	public User(String uuid){
-		
+		this.uuid = uuid;
 	}
 
 	/**
@@ -130,6 +131,10 @@ public class User {
 		this.rank = rank;
 	}
 	
+	public String getUniqueId(){
+		return player != null ? player.getUniqueId().toString() : uuid;
+	}
+	
 	public void loadPlayer(Player player){
 		this.player = player;
 	}
@@ -139,7 +144,7 @@ public class User {
 	}
 
 	public boolean isOnline() {
-		return player.isOnline();
+		return player == null ? false : player.isOnline();
 	}
 
 	public void setDead() {
@@ -156,6 +161,10 @@ public class User {
 
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public String getFullName(){
+		return this.rank.getDisplay() + this.player.getName();
 	}
 
 	public void sendActionbar(String message) {

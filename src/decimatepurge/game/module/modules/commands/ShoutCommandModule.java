@@ -35,8 +35,8 @@ public class ShoutCommandModule extends SimplePlayerCommandModule {
 			for (int i = 0; i < args.length; i++) {
 				message += args[i] + " ";
 			}
-			Bukkit.broadcastMessage(ChatColor.GOLD + "[SHOUT] " + ChatColor.WHITE + "[" + user.getFaction() + "] "
-					+ player.getName() + ChatColor.GRAY + ": " + message.trim());
+			Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "[SHOUT] " + ChatColor.GRAY + "[" + user.getFaction() + "] "
+					+ user.getFullName() + ChatColor.GRAY + ": " + message.trim());
 			shouted.add(player.getUniqueId().toString());
 		} else {
 			player.sendMessage(ChatColor.RED + "You have already shouted this game.");

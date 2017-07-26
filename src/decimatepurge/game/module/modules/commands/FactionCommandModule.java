@@ -7,13 +7,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import decimatepurge.core.Purge;
 import decimatepurge.game.module.ModuleManager.ModuleID;
 import decimatepurge.game.module.modules.objects.Faction;
+import decimatepurge.user.Rank;
 import decimatepurge.user.User;
 
-public class FactionCommandModule extends SimplePlayerCommandModule {
+public class FactionCommandModule extends SimplePlayerCommandModule implements Listener {
 
 	private List<Faction> factions = new ArrayList<Faction>();
 
@@ -117,13 +122,19 @@ public class FactionCommandModule extends SimplePlayerCommandModule {
 				solo++;
 			}
 		}
-		player.sendMessage(ChatColor.YELLOW + "Solo players" + ChatColor.GRAY + ": " + ChatColor.RED + solo);
+		player.sendMessage(ChatColor.GRAY + "Solo players" + ChatColor.GRAY + ": " + ChatColor.YELLOW + solo);
 		for (int i = 0; i < (factions.size() >= 10 ? 10 : factions.size()); i++) {
 			if (factions.get(i).getAliveSize() >= 0) {
 				player.sendMessage(ChatColor.RED + factions.get(i).getColoredName(player) + ChatColor.GRAY + ": "
-						+ ChatColor.RED + factions.get(i).getAliveSize());
+						+ ChatColor.YELLOW + factions.get(i).getAliveSize());
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent event){
+		User user = Purge.getInstance().getUserManager().getUserByUUID(event.getPlayer().getUniqueId().toString(), false);
+		this.changeFaction(user, user.getFaction());
 	}
 
 	@Override
@@ -146,7 +157,7 @@ public class FactionCommandModule extends SimplePlayerCommandModule {
 			return;
 		}
 		if (args[0].equalsIgnoreCase("change")) {
-			if (player.isOp()) {
+			if (super.hasRank(user, Rank.DEVELOPER.getId(), true)) {
 				if (args.length >= 2) {
 					this.changeFaction(user, args[1]);
 					player.sendMessage(ChatColor.YELLOW + "Changed your faction.");
@@ -162,6 +173,7 @@ public class FactionCommandModule extends SimplePlayerCommandModule {
 
 	@Override
 	public void loadCommand() {
+		Bukkit.getServer().getPluginManager().registerEvents(this, Purge.getInstance());
 		// Appears redundant, but this is necessary for loading faction wrappers
 		for (User user : Purge.getInstance().getUserManager().getUsers()) {
 			this.changeFaction(user, user.getFaction());
@@ -170,6 +182,7 @@ public class FactionCommandModule extends SimplePlayerCommandModule {
 
 	@Override
 	public void unloadCommand() {
+		HandlerList.unregisterAll(this);
 		this.factions.clear();
 	}
 

@@ -2,13 +2,11 @@ package decimatepurge.game.gamestage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import decimatepurge.core.Purge;
@@ -29,8 +27,10 @@ public class GameStageInGame extends GameStage {
 		super.loadModulesNoArguments(ModuleID.TEAM_MODULE, ModuleID.QUIT_SERVER_MODULE,
 				ModuleID.NO_REGENERATION_MODULE, ModuleID.FACTION_DEFAULT_COMMAND_MODULE, ModuleID.SHOUT_COMMAND_MODULE,
 				ModuleID.BLOCK_COMMAND_MODULE, ModuleID.DEATH_MESSAGE_MODULE, ModuleID.COMPASS_POINT_MODULE,
-				ModuleID.HUB_COMMAND_MODULE, ModuleID.SPECTATE_COMMAND_MODULE);
+				ModuleID.HUB_COMMAND_MODULE, ModuleID.SPECTATE_COMMAND_MODULE, ModuleID.HEALTH_COMMAND_MODULE, ModuleID.ENDERPEARL_DAMAGE_REMOVAL_MODULE,
+				ModuleID.GOLDEN_HEAD_MODULE);
 
+		super.loadModule(ModuleID.SPAWN_GEAR_MODULE, super.getModule(ModuleID.TEAM_MODULE), 100);
 		super.loadModule(ModuleID.NO_CONNECTION_MODULE, true);
 		super.loadModule(ModuleID.MAP_MODULE, 100, true); // Map size as
 															// argument 0. Should
@@ -39,20 +39,22 @@ public class GameStageInGame extends GameStage {
 
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
-		die(event.getEntity(), true);
+		//TODO change to true
+		die(event.getEntity(), false);
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
+		Bukkit.broadcastMessage(ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.GRAY + " died! (disconnect)");
 		die(event.getPlayer(), true);
 	}
 
-	@EventHandler
-	public void onGamemodeChange(PlayerGameModeChangeEvent event) {
-		if (event.getNewGameMode().equals(GameMode.SPECTATOR)) {
-			die(event.getPlayer(), false);
-		}
-	}
+//	@EventHandler
+//	public void onGamemodeChange(PlayerGameModeChangeEvent event) {
+//		if (event.getNewGameMode().equals(GameMode.SPECTATOR)) {
+//			die(event.getPlayer(), false);
+//		}
+//	}
 
 	private void die(Player player, boolean kick) {
 		User user = Purge.getInstance().getUserManager().getUser(player);
@@ -61,6 +63,10 @@ public class GameStageInGame extends GameStage {
 
 		if (player.isOnline() && kick) {
 			Purge.getInstance().kickPlayer(player, ChatColor.RED + "You lost the war");
+		}
+		
+		if(!kick){
+			user.setSpectating();
 		}
 
 		Team winner = endCheck();
@@ -93,7 +99,7 @@ public class GameStageInGame extends GameStage {
 				winName = winner.getUsers().get(0).getPlayer().getName();
 			}
 			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage(ChatColor.RED + winner.getName() + " has won the war!");
+			Bukkit.broadcastMessage(ChatColor.RED + winName + " has won the war!");
 			Bukkit.broadcastMessage("");
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				player.playSound(player.getLocation(), Sound.FIREWORK_BLAST, 1, 1);

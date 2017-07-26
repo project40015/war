@@ -12,7 +12,7 @@ import decimatepurge.user.User;
 
 public class MapModule extends Module {
 
-	World world = Bukkit.getServer().getWorlds().get(0);
+	World world = Purge.getInstance().getWorld();
 	private int border = 1000;
 	private final int borderPrime = 5;
 	private int tBorder = (border - borderPrime);
@@ -23,20 +23,28 @@ public class MapModule extends Module {
 
 	public void teleport(Player player) {
 		player.teleport(getRandomLocation());
+		player.setFallDistance(-100);
 	}
 
 	private Location getRandomLocation() {
 		int x = (int) (2 * Math.random() * tBorder) - tBorder;
 		int z = (int) (2 * Math.random() * tBorder) - tBorder;
-		int y = world.getHighestBlockYAt(x, z);
+		int y = Bukkit.getServer().getWorld("war_world").getHighestBlockYAt(x, z);
 
-		Location location = new Location(world, x + 0.5, y, z + 0.5);
+		Location location = new Location(Bukkit.getServer().getWorld("war_world"), x + 0.5, y, z + 0.5);
 
 		return isSafe(location) ? location : getRandomLocation();
 	}
 
 	private boolean isSafe(Location location) {
-		return !location.clone().add(0, -1, 0).getBlock().isLiquid();
+		return location == null
+				|| location
+				.clone()
+				.add(0, -1, 0)
+				.getBlock() == null ||
+				!location.clone().add(0, -1, 0)
+				.getBlock()
+				.isLiquid();
 	}
 
 	@Override

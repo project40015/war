@@ -22,11 +22,11 @@ public class GameStagePostGame extends GameStage {
 		super("Post Game", GameStageID.POST_GAME_STAGE);
 		super.loadModulesNoArguments(ModuleID.GRIEF_PROTECTION_MODULE, ModuleID.NO_CONNECTION_MODULE,
 				ModuleID.DEFAULT_CHAT_MODULE, ModuleID.QUIT_SERVER_MODULE, ModuleID.BLOCK_COMMAND_MODULE,
-				ModuleID.HUB_COMMAND_MODULE);
+				ModuleID.HUB_COMMAND_MODULE, ModuleID.ENDERPEARL_DAMAGE_REMOVAL_MODULE);
 	}
 
 	private void platform() {
-		Location center = new Location(Bukkit.getWorlds().get(0), 0, 140, 0);
+		Location center = new Location(Bukkit.getWorld("war_world"), 0, 140, 0);
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 4; y++) {
 				for (int z = 0; z < 5; z++) {
@@ -39,7 +39,9 @@ public class GameStagePostGame extends GameStage {
 			}
 		}
 		for (User user : Purge.getInstance().getUserManager().getUsers()) {
-			user.getPlayer().teleport(center.clone().add(0, 1, 0));
+			if(user.getPlayer() != null && user.getPlayer().isOnline()){
+				user.getPlayer().teleport(center.clone().add(0, 1, 0));
+			}
 			if (!user.isDead() && !user.isSpectating() && user.isOnline()) {
 				FireworkEffect effect = FireworkEffect.builder().trail(false).flicker(false).withColor(Color.YELLOW)
 						.with(FireworkEffect.Type.BALL).build();

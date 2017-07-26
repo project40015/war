@@ -3,13 +3,16 @@ package decimatepurge.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
 
 import decimate.WarSocket.ServerInformationPacketResultEvent;
 import decimate.WarSocket.WarSocket;
@@ -89,6 +92,10 @@ public class UserManager implements Manager {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
+		for(PotionEffect pe : event.getPlayer().getActivePotionEffects()){
+			event.getPlayer().removePotionEffect(pe.getType());
+		}
+		event.getPlayer().teleport(new Location(Bukkit.getWorld("war_world"), 0, Bukkit.getWorld("war_world").getHighestBlockYAt(0, 0), 0));
 		getUserByUUID(event.getPlayer().getUniqueId().toString(), false).loadPlayer(event.getPlayer());
 	}
 	
@@ -105,11 +112,13 @@ public class UserManager implements Manager {
 	
 	@EventHandler
 	public void onResult(ServerInformationPacketResultEvent event){
-		User user = this.addUser(event.getUUID());
-		user.setFaction(event.getFaction());
-		Rank rank = Rank.valueOf(event.getRank());
-		user.loadRank(rank == null ? Rank.DEFAULT : rank);
-		this.requestUser(user);
+		if(!Purge.getInstance().getGameStageManager().getCurrentStage().getLoadedModules().contains(ModuleID.NO_CONNECTION_MODULE)){
+			User user = this.addUser(event.getUUID());
+			user.setFaction(event.getFaction());
+			Rank rank = Rank.valueOf(event.getRank());
+			user.loadRank(rank == null ? Rank.DEFAULT : rank);
+			this.requestUser(user);
+		}
 	}
 
 	@EventHandler

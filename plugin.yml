@@ -15,3 +15,5 @@ commands:
     description: Return to the hub
   spectate:
     description: Change to spectate
+  health:
+    description: Check a player's health

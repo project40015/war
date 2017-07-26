@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +23,9 @@ public class Purge extends JavaPlugin {
 	private UserManager userManager;
 	private BungeeManager bungeeManager;
 
+	private World world;
+	
+	@Override
 	public void onEnable() {
 		instance = this;
 
@@ -30,6 +34,8 @@ public class Purge extends JavaPlugin {
 		for (Manager manager : this.managers) {
 			Bukkit.getServer().getPluginManager().registerEvents(manager, this);
 		}
+		
+		Bukkit.getServer().setSpawnRadius(0);
 	}
 
 	public String getServerID(){
@@ -58,10 +64,19 @@ public class Purge extends JavaPlugin {
 		return manager;
 	}
 
+	@Override
 	public void onDisable() {
 		for (Manager manager : managers) {
 			manager.onDisable();
 		}
+	}
+	
+	public void setWorld(World world){
+		this.world = world;
+	}
+	
+	public World getWorld(){
+		return this.world;
 	}
 
 	public ModuleManager getModuleManager() {

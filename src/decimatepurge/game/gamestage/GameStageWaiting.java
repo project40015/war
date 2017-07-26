@@ -1,6 +1,8 @@
 package decimatepurge.game.gamestage;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -63,6 +65,11 @@ public class GameStageWaiting extends GameStage {
 
 	@Override
 	public void start() {
+		for(Entity entity : Bukkit.getServer().getWorld("war_world").getEntities()){
+			if(entity instanceof Item){
+				entity.remove();
+			}
+		}
 		scoreboardModule = (RegularScoreboardInformationModule) super.getModule(
 				ModuleID.REGULAR_SCOREBOARD_INFORMATION_MODULE);
 		factionModule = (FactionCommandModule) super.getModule(ModuleID.FACTION_DEFAULT_COMMAND_MODULE);

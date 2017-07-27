@@ -18,6 +18,19 @@ public class User {
 	private boolean spectating = false;
 	private boolean off = false;
 	private String uuid;
+	private String name;
+	
+	private long joined;
+	
+	//Global variables
+	private int wins;
+	private int totalKills;
+	private int totalDeaths;
+	private double elo;
+	private long playtime;
+	private int gamesPlayed;
+	
+	private int kills;
 
 	/**
 	 * <h1>Load a user object</h1>
@@ -35,6 +48,7 @@ public class User {
 	 */
 	@Deprecated
 	public User(Player player, String faction) {
+		joined = System.currentTimeMillis();
 		this.player = player;
 		this.faction = faction;
 	}
@@ -51,6 +65,7 @@ public class User {
 	 *            Player to place as spectator
 	 */
 	public User(Player player) {
+		joined = System.currentTimeMillis();
 		this.player = player;
 		setSpectating();
 	}
@@ -67,6 +82,7 @@ public class User {
 	 *            Player to place as spectator
 	 */
 	public User(String uuid){
+		joined = System.currentTimeMillis();
 		this.uuid = uuid;
 	}
 
@@ -137,6 +153,7 @@ public class User {
 	
 	public void loadPlayer(Player player){
 		this.player = player;
+		this.name = player.getName();
 	}
 
 	public boolean isSpectating() {
@@ -165,6 +182,88 @@ public class User {
 	
 	public String getFullName(){
 		return this.rank.getDisplay() + this.player.getName();
+	}
+	
+	public void setTotalKills(int totalKills){
+		this.totalKills = totalKills;
+	}
+	
+	public void setTotalDeaths(int totalDeaths){
+		this.totalDeaths = totalDeaths;
+	}
+	
+	public void setElo(double elo){
+		this.elo = elo;
+	}
+	
+	public void setWins(int wins){
+		this.wins = wins;
+	}
+	
+	public void setPlayTime(long playtime){
+		this.playtime = playtime;
+	}
+	
+	public void killUser(User killed){
+		this.kills++;
+		this.totalKills++;
+		setElo((elo + 32*(1 - Math.pow(10, elo/400.0)/(Math.pow(10, elo/400.0) + Math.pow(10, killed.elo/400.0)))));
+	}
+	
+	public void death(User killer){
+		this.totalDeaths++;
+		setElo((elo + 32*(0 - Math.pow(10, elo/400.0)/(Math.pow(10, killer.elo/400.0) + Math.pow(10, elo/400.0)))));
+	}
+	
+	public void setGamesPlayed(int gamesPlayed){
+		this.gamesPlayed = gamesPlayed;
+	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	/*
+	 * 	private int wins;
+	private int totalKills;
+	private int totalDeaths;
+	private double elo;
+	private long playtime;
+	private int gamesPlayed;
+	
+	private int kills;
+	 */
+	
+	public int getWins(){
+		return wins;
+	}
+	
+	public int getTotalKills(){
+		return totalKills;
+	}
+	
+	public int getTotalDeaths(){
+		return totalDeaths;
+	}
+	
+	public double getElo(){
+		return elo;
+	}
+	
+	public long getPlaytime(){
+		return playtime + System.currentTimeMillis() - joined;
+	}
+	
+	public int getGamesPlayed(){
+		return gamesPlayed;
+	}
+	
+	public int getGameKills(){
+		return kills;
 	}
 
 	public void sendActionbar(String message) {

@@ -1,5 +1,7 @@
 package decimatepurge.core;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,9 @@ public class Purge extends JavaPlugin {
 	private GameStageManager gameStageManager;
 	private UserManager userManager;
 	private BungeeManager bungeeManager;
+	
+	private String conString = "jdbc:mysql://198.100.26.75/mc_11737?user=mc_11737&password=950094c839&autoReconnect=true";
+	private Connection connection;
 
 	private World world;
 	
@@ -29,6 +34,7 @@ public class Purge extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 
+		this.establishConnection();
 		fillManagers();
 
 		for (Manager manager : this.managers) {
@@ -40,6 +46,10 @@ public class Purge extends JavaPlugin {
 
 	public String getServerID(){
 		return "test";
+	}
+	
+	public Connection getConnection(){
+		return this.connection;
 	}
 	
 	public void shutdown() {
@@ -57,6 +67,16 @@ public class Purge extends JavaPlugin {
 		moduleManager = (ModuleManager) addManager(new ModuleManager());
 		gameStageManager = (GameStageManager) addManager(new GameStageManager());
 		bungeeManager = (BungeeManager) addManager(new BungeeManager());
+	}
+	
+	private void establishConnection() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			this.connection = DriverManager.getConnection(conString);
+			this.connection.setAutoCommit(true);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private Manager addManager(Manager manager) {

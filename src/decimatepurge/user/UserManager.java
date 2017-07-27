@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -25,6 +26,7 @@ public class UserManager implements Manager {
 
 	private List<User> users = new ArrayList<>();
 
+	@SuppressWarnings("deprecation")
 	private User addUser(String uuid) {
 		removeUser(uuid);
 		NoConnectionModule module = (NoConnectionModule) Purge.getInstance().getGameStageManager().getCurrentStage()
@@ -39,6 +41,7 @@ public class UserManager implements Manager {
 		}
 		User user = new User(uuid);
 		this.users.add(user);
+		Bukkit.getScheduler().runTaskAsynchronously(Purge.getInstance(), new UserLoadDataTask(user));
 		return user;
 	}
 	
@@ -91,6 +94,16 @@ public class UserManager implements Manager {
 	}
 	
 	@EventHandler
+	public void onDeath(PlayerDeathEvent event){
+		if(event.getEntity().getKiller() != null){
+			User user = this.getUser(event.getEntity());
+			User kUser = this.getUser(event.getEntity().getKiller());
+			user.death(kUser);
+			kUser.killUser(user);
+		}
+	}
+	
+	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		for(PotionEffect pe : event.getPlayer().getActivePotionEffects()){
 			event.getPlayer().removePotionEffect(pe.getType());
@@ -121,9 +134,11 @@ public class UserManager implements Manager {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		User user = getUser(event.getPlayer());
+		Bukkit.getScheduler().runTaskAsynchronously(Purge.getInstance(), new UserPushDataTask(user));
 		if (user != null) {
 			user.turnOff();
 		}

@@ -17,3 +17,6 @@ commands:
     description: Change to spectate
   health:
     description: Check a player's health
+  stats:
+    description: View a player's stats
+    aliases: [statistics]

@@ -60,10 +60,14 @@ public class MapModule extends Module {
 				}
 			}
 		}
+		
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "worldborder set " + border*2);
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "worldborder set 32 3600");
 	}
 
 	@Override
 	public void unload() {
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "worldborder set " + border*2);
 	}
 
 }

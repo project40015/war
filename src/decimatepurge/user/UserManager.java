@@ -93,13 +93,24 @@ public class UserManager implements Manager {
 		return null;
 	}
 	
+	public User getUser(String player) {
+		for (User user : users) {
+			if (user.getName().equalsIgnoreCase(player)) {
+				return user;
+			}
+		}
+		return null;
+	}
+	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event){
+		User user = this.getUser(event.getEntity());
 		if(event.getEntity().getKiller() != null){
-			User user = this.getUser(event.getEntity());
 			User kUser = this.getUser(event.getEntity().getKiller());
 			user.death(kUser);
 			kUser.killUser(user);
+		}else{
+			user.death();
 		}
 	}
 	
@@ -144,9 +155,12 @@ public class UserManager implements Manager {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable() {
-
+		for(User user : this.users){
+			Bukkit.getScheduler().runTaskAsynchronously(Purge.getInstance(), new UserPushDataTask(user));
+		}
 	}
 
 }

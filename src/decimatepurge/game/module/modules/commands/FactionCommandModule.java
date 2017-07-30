@@ -9,7 +9,6 @@ import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import decimatepurge.core.Purge;
@@ -18,7 +17,7 @@ import decimatepurge.game.module.modules.objects.Faction;
 import decimatepurge.user.Rank;
 import decimatepurge.user.User;
 
-public class FactionCommandModule extends SimplePlayerCommandModule implements Listener {
+public class FactionCommandModule extends SimplePlayerCommandModule {
 
 	private List<Faction> factions = new ArrayList<Faction>();
 

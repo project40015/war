@@ -26,7 +26,7 @@ public class User {
 	private int wins;
 	private int totalKills;
 	private int totalDeaths;
-	private double elo;
+	private double elo = 1000;
 	private long playtime;
 	private int gamesPlayed;
 	
@@ -213,6 +213,11 @@ public class User {
 	public void death(User killer){
 		this.totalDeaths++;
 		setElo((elo + 32*(0 - Math.pow(10, elo/400.0)/(Math.pow(10, killer.elo/400.0) + Math.pow(10, elo/400.0)))));
+	}
+	
+	public void death(){
+		this.totalDeaths++;
+		setElo(elo * 0.985);
 	}
 	
 	public void setGamesPlayed(int gamesPlayed){

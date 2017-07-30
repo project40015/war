@@ -38,9 +38,9 @@ public class GoldenHeadModule extends SimpleEventModule {
 		if(event.getItem().getType().equals(Material.GOLDEN_APPLE)){
 			if(event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getDisplayName() != null){
 				if(event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "Golden Head")){
-					event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1, 60));
-					event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 1, 10));
-					event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 0, 120));
+					event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 15*20, 0));
+					event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10*20, 1));
+					event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 120*20, 0));
 					if(event.getItem().getAmount() > 1){
 						ItemStack n = event.getItem().clone();
 						n.setAmount(n.getAmount() - 1);

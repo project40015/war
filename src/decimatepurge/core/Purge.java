@@ -25,7 +25,7 @@ public class Purge extends JavaPlugin {
 	private UserManager userManager;
 	private BungeeManager bungeeManager;
 	
-	private String conString = "jdbc:mysql://198.100.26.75/mc_11737?user=mc_11737&password=950094c839&autoReconnect=true";
+	private String conString = "jdbc:mysql://198.100.26.121/mc_11737?user=mc_11737&password=f5fcae0e7d&autoReconnect=true";
 	private Connection connection;
 
 	private World world;

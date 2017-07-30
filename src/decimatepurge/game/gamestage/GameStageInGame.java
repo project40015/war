@@ -28,11 +28,11 @@ public class GameStageInGame extends GameStage {
 				ModuleID.NO_REGENERATION_MODULE, ModuleID.FACTION_DEFAULT_COMMAND_MODULE, ModuleID.SHOUT_COMMAND_MODULE,
 				ModuleID.BLOCK_COMMAND_MODULE, ModuleID.DEATH_MESSAGE_MODULE, ModuleID.COMPASS_POINT_MODULE,
 				ModuleID.HUB_COMMAND_MODULE, ModuleID.SPECTATE_COMMAND_MODULE, ModuleID.HEALTH_COMMAND_MODULE, ModuleID.ENDERPEARL_DAMAGE_REMOVAL_MODULE,
-				ModuleID.GOLDEN_HEAD_MODULE);
+				ModuleID.GOLDEN_HEAD_MODULE, ModuleID.LIMITED_BREAK_MODULE);
 
-		super.loadModule(ModuleID.SPAWN_GEAR_MODULE, super.getModule(ModuleID.TEAM_MODULE), 100);
+		super.loadModule(ModuleID.SPAWN_GEAR_MODULE, super.getModule(ModuleID.TEAM_MODULE), 90);
 		super.loadModule(ModuleID.NO_CONNECTION_MODULE, true);
-		super.loadModule(ModuleID.MAP_MODULE, 100, true); // Map size as
+		super.loadModule(ModuleID.MAP_MODULE, 250, true); // Map size as
 															// argument 0. Should
 															// be higher.
 	}
@@ -98,8 +98,11 @@ public class GameStageInGame extends GameStage {
 			if (winName.equalsIgnoreCase("")) {
 				winName = winner.getUsers().get(0).getPlayer().getName();
 			}
+			for(User user : winner.getAliveMembers()){
+				user.setWins(user.getWins() + 1);
+			}
 			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage(ChatColor.RED + winName + " has won the war!");
+			Bukkit.broadcastMessage(ChatColor.GOLD + winName + " has won the war!");
 			Bukkit.broadcastMessage("");
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				player.playSound(player.getLocation(), Sound.FIREWORK_BLAST, 1, 1);
@@ -123,6 +126,9 @@ public class GameStageInGame extends GameStage {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 			player.playSound(player.getLocation(), Sound.WOLF_HOWL, 1, 1);
 			player.setSaturation(24);
+		}
+		for(User user : Purge.getInstance().getUserManager().getUsers()){
+			user.setGamesPlayed(user.getGamesPlayed() + 1);
 		}
 	}
 

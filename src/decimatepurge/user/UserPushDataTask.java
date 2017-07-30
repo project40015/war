@@ -17,7 +17,7 @@ public class UserPushDataTask extends BukkitRunnable {
 	public void run() {
 		try {
 			PreparedStatement s = Purge.getInstance().getConnection().prepareStatement(
-					"UPDATE `users` SET `name` = ?, `kills` = ?, `deaths` = ?, `wins` = ?, `playTime` = ?, `gamesPlayed` = ?, `elo` = ? WHERE `uuid` = ?");
+					"UPDATE `WarUserData` SET `name` = ?, `kills` = ?, `deaths` = ?, `wins` = ?, `playTime` = ?, `gamesPlayed` = ?, `elo` = ? WHERE `uuid` = ?");
 			
 			s.setString(8, user.getUniqueId());
 			s.setString(1, user.getName());

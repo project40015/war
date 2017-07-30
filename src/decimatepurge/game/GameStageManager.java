@@ -42,6 +42,7 @@ public class GameStageManager implements Manager {
 		ModuleManager moduleManager = Purge.getInstance().getModuleManager();
 		moduleManager.getModule(ModuleID.NO_WEATHER_MODULE).loadModule();
 		moduleManager.getModule(ModuleID.BLOCK_ANIMAL_SPAWN_MODULE).loadModule();
+		moduleManager.getModule(ModuleID.USER_STATISTICS_COMMAND_MODULE).loadModule();
 	}
 
 	private void start() {

@@ -14,6 +14,7 @@ import decimatepurge.game.module.modules.EnderpearlDamageRemovalModule;
 import decimatepurge.game.module.modules.GoldenHeadModule;
 import decimatepurge.game.module.modules.GriefProtectionModule;
 import decimatepurge.game.module.modules.JoinServerModule;
+import decimatepurge.game.module.modules.LimitedBreakModule;
 import decimatepurge.game.module.modules.MapModule;
 import decimatepurge.game.module.modules.NoConnectionModule;
 import decimatepurge.game.module.modules.NoDamageModule;
@@ -29,16 +30,17 @@ import decimatepurge.game.module.modules.commands.HubCommandModule;
 import decimatepurge.game.module.modules.commands.ShoutCommandModule;
 import decimatepurge.game.module.modules.commands.SpectateCommandModule;
 import decimatepurge.game.module.modules.commands.StartGameCommandModule;
+import decimatepurge.game.module.modules.commands.UserStatisticsCommandModule;
 
 public class ModuleManager implements Manager {
 
 	public enum ModuleID {
 
 		// Commands
-		START_GAME_COMMAND_MODULE, FACTION_DEFAULT_COMMAND_MODULE, SHOUT_COMMAND_MODULE, SPECTATE_COMMAND_MODULE, HUB_COMMAND_MODULE, HEALTH_COMMAND_MODULE,
+		START_GAME_COMMAND_MODULE, FACTION_DEFAULT_COMMAND_MODULE, SHOUT_COMMAND_MODULE, SPECTATE_COMMAND_MODULE, HUB_COMMAND_MODULE, HEALTH_COMMAND_MODULE, USER_STATISTICS_COMMAND_MODULE,
 
 		// Game mechanics
-		NO_DAMAGE_MODULE, GRIEF_PROTECTION_MODULE, NO_CONNECTION_MODULE, TEAM_MODULE, DEFAULT_CHAT_MODULE, JOIN_SERVER_MODULE, QUIT_SERVER_MODULE, MAP_MODULE, NO_REGENERATION_MODULE, REGULAR_SCOREBOARD_INFORMATION_MODULE, BLOCK_COMMAND_MODULE, DEATH_MESSAGE_MODULE, COMPASS_POINT_MODULE, SPAWN_GEAR_MODULE, ENDERPEARL_DAMAGE_REMOVAL_MODULE, BLOCK_ANIMAL_SPAWN_MODULE, BOW_HIT_DAMAGE_INDICATOR_MODULE, GOLDEN_HEAD_MODULE, NO_WEATHER_MODULE;
+		NO_DAMAGE_MODULE, GRIEF_PROTECTION_MODULE, NO_CONNECTION_MODULE, TEAM_MODULE, DEFAULT_CHAT_MODULE, JOIN_SERVER_MODULE, QUIT_SERVER_MODULE, MAP_MODULE, NO_REGENERATION_MODULE, REGULAR_SCOREBOARD_INFORMATION_MODULE, BLOCK_COMMAND_MODULE, DEATH_MESSAGE_MODULE, COMPASS_POINT_MODULE, SPAWN_GEAR_MODULE, ENDERPEARL_DAMAGE_REMOVAL_MODULE, BLOCK_ANIMAL_SPAWN_MODULE, BOW_HIT_DAMAGE_INDICATOR_MODULE, GOLDEN_HEAD_MODULE, NO_WEATHER_MODULE, LIMITED_BREAK_MODULE;
 	}
 
 	private List<Module> modules = new ArrayList<>();
@@ -85,6 +87,8 @@ public class ModuleManager implements Manager {
 				ModuleID.BLOCK_ANIMAL_SPAWN_MODULE));
 		this.modules.add(new GoldenHeadModule(ModuleID.GOLDEN_HEAD_MODULE));
 		this.modules.add(new NoWeatherModule(ModuleID.NO_WEATHER_MODULE));
+		this.modules.add(new UserStatisticsCommandModule(ModuleID.USER_STATISTICS_COMMAND_MODULE, "stats"));
+		this.modules.add(new LimitedBreakModule(ModuleID.LIMITED_BREAK_MODULE));
 	}
 
 	public Module getModule(ModuleID id) {

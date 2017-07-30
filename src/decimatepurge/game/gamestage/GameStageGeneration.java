@@ -1,5 +1,9 @@
 package decimatepurge.game.gamestage;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
 
@@ -29,16 +33,16 @@ public class GameStageGeneration extends GameStage {
 
 	@Override
 	public void start() {
-//		try {
-//			FileUtils.cleanDirectory(new File(Bukkit.getServer().getWorldContainer(), "war_world"));
-//			FileUtils.copyDirectory(new File(Purge.getInstance().getDataFolder(), "war_world_1"), new File(Bukkit.getServer().getWorldContainer(), "war_world"));
-//			finish();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		Bukkit.createWorld(new WorldCreator("war_world"));
-		Purge.getInstance().setWorld(Bukkit.getServer().getWorld("war_world"));
-		finish();
+		try {
+			FileUtils.cleanDirectory(new File(Bukkit.getServer().getWorldContainer(), "war_world"));
+			FileUtils.copyDirectory(new File(Purge.getInstance().getDataFolder(), "war_world_1"), new File(Bukkit.getServer().getWorldContainer(), "war_world"));
+			Bukkit.createWorld(new WorldCreator("war_world"));
+			Purge.getInstance().setWorld(Bukkit.getServer().getWorld("war_world"));
+			finish();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

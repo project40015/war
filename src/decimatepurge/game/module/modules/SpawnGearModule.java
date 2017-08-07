@@ -27,22 +27,20 @@ public class SpawnGearModule extends Module {
 	}
 	
 	private void loadGear(){
-		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 40, new ItemStack(Material.DIAMOND_AXE), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 3)));
-		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 45, new ItemStack(Material.DIAMOND_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 3)));
-		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 40, new ItemStack(Material.DIAMOND_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2), new Enchantment(org.bukkit.enchantments.Enchantment.FIRE_ASPECT, 1)));
-		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 30, new ItemStack(Material.DIAMOND_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 20, new ItemStack(Material.DIAMOND_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 1)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 25, new ItemStack(Material.IRON_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 1), new Enchantment(org.bukkit.enchantments.Enchantment.FIRE_ASPECT, 1)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 25, new ItemStack(Material.IRON_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2)));
+		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 30, new ItemStack(Material.DIAMOND_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 35, new ItemStack(Material.IRON_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2), new Enchantment(org.bukkit.enchantments.Enchantment.FIRE_ASPECT, 1)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 35, new ItemStack(Material.IRON_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 3)));
+		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 40, new ItemStack(Material.DIAMOND_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2), new Enchantment(org.bukkit.enchantments.Enchantment.FIRE_ASPECT, 1)));
+		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 45, new ItemStack(Material.DIAMOND_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 3)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 45, new ItemStack(Material.IRON_SWORD), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 4)));
-		this.items.add(new SpawnGearItem(GearItemType.WEAPON_MAIN, 30, new ItemStack(Material.DIAMOND_AXE), new Enchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2)));
 		
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_BOW, 10, new ItemStack(Material.BOW), new Enchantment(org.bukkit.enchantments.Enchantment.ARROW_DAMAGE, 1)));
-		this.items.add(new SpawnGearItem(GearItemType.WEAPON_BOW, 20, new ItemStack(Material.BOW), new Enchantment(org.bukkit.enchantments.Enchantment.ARROW_DAMAGE, 1), new Enchantment(org.bukkit.enchantments.Enchantment.ARROW_FIRE, 1)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_BOW, 15, new ItemStack(Material.BOW), new Enchantment(org.bukkit.enchantments.Enchantment.ARROW_DAMAGE, 2)));
 		this.items.add(new SpawnGearItem(GearItemType.WEAPON_BOW, 20, new ItemStack(Material.BOW), new Enchantment(org.bukkit.enchantments.Enchantment.ARROW_DAMAGE, 3)));
+		this.items.add(new SpawnGearItem(GearItemType.WEAPON_BOW, 20, new ItemStack(Material.BOW), new Enchantment(org.bukkit.enchantments.Enchantment.ARROW_DAMAGE, 1), new Enchantment(org.bukkit.enchantments.Enchantment.ARROW_FIRE, 1)));
 
 		this.items.add(new SpawnGearItem(GearItemType.HELMET, 5, new ItemStack(Material.IRON_HELMET), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
 		this.items.add(new SpawnGearItem(GearItemType.HELMET, 10, new ItemStack(Material.IRON_HELMET), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
@@ -50,17 +48,17 @@ public class SpawnGearModule extends Module {
 		this.items.add(new SpawnGearItem(GearItemType.HELMET, 20, new ItemStack(Material.DIAMOND_HELMET), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
 		this.items.add(new SpawnGearItem(GearItemType.HELMET, 25, new ItemStack(Material.DIAMOND_HELMET), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 3)));
 		
-		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 5, new ItemStack(Material.IRON_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
-		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 10, new ItemStack(Material.IRON_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
-		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 15, new ItemStack(Material.DIAMOND_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
-		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 20, new ItemStack(Material.DIAMOND_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
-		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 25, new ItemStack(Material.DIAMOND_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 3)));
+		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 10, new ItemStack(Material.IRON_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
+		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 15, new ItemStack(Material.IRON_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
+		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 20, new ItemStack(Material.DIAMOND_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
+		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 25, new ItemStack(Material.DIAMOND_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
+		this.items.add(new SpawnGearItem(GearItemType.CHESTPLATE, 30, new ItemStack(Material.DIAMOND_CHESTPLATE), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 3)));
 		
-		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 5, new ItemStack(Material.IRON_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
-		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 10, new ItemStack(Material.IRON_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
-		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 15, new ItemStack(Material.DIAMOND_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
-		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 20, new ItemStack(Material.DIAMOND_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
-		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 25, new ItemStack(Material.DIAMOND_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 3)));
+		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 10, new ItemStack(Material.IRON_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
+		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 15, new ItemStack(Material.IRON_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
+		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 20, new ItemStack(Material.DIAMOND_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
+		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 25, new ItemStack(Material.DIAMOND_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));
+		this.items.add(new SpawnGearItem(GearItemType.LEGGINGS, 30, new ItemStack(Material.DIAMOND_LEGGINGS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 3)));
 		
 		this.items.add(new SpawnGearItem(GearItemType.BOOTS, 5, new ItemStack(Material.IRON_BOOTS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1)));
 		this.items.add(new SpawnGearItem(GearItemType.BOOTS, 10, new ItemStack(Material.IRON_BOOTS), new Enchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)));

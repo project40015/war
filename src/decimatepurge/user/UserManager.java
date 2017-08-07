@@ -121,6 +121,8 @@ public class UserManager implements Manager {
 		}
 		event.getPlayer().teleport(new Location(Bukkit.getWorld("war_world"), 0, Bukkit.getWorld("war_world").getHighestBlockYAt(0, 0), 0));
 		getUserByUUID(event.getPlayer().getUniqueId().toString(), false).loadPlayer(event.getPlayer());
+		event.getPlayer().setWalkSpeed(0.2F);
+		event.getPlayer().setFlySpeed(0.2F);
 	}
 	
 	@EventHandler

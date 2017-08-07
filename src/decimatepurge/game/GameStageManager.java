@@ -43,6 +43,7 @@ public class GameStageManager implements Manager {
 		moduleManager.getModule(ModuleID.NO_WEATHER_MODULE).loadModule();
 		moduleManager.getModule(ModuleID.BLOCK_ANIMAL_SPAWN_MODULE).loadModule();
 		moduleManager.getModule(ModuleID.USER_STATISTICS_COMMAND_MODULE).loadModule();
+		moduleManager.getModule(ModuleID.PLAYER_LIST_HEADER_FOOTER_MODULE).loadModule();
 	}
 
 	private void start() {

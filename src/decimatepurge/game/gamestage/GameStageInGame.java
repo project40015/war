@@ -40,13 +40,12 @@ public class GameStageInGame extends GameStage {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		//TODO change to true
-		die(event.getEntity(), false);
+		die(event.getEntity(), false, false);
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		Bukkit.broadcastMessage(ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.GRAY + " died! (disconnect)");
-		die(event.getPlayer(), true);
+		die(event.getPlayer(), true, true);
 	}
 
 //	@EventHandler
@@ -56,8 +55,11 @@ public class GameStageInGame extends GameStage {
 //		}
 //	}
 
-	private void die(Player player, boolean kick) {
+	private void die(Player player, boolean kick, boolean quit) {
 		User user = Purge.getInstance().getUserManager().getUser(player);
+		if(!user.isDead() && quit){
+			Bukkit.broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " died! (disconnect)");
+		}
 		user.setDead();
 		teamModule.getTeam(user).recalc();
 
@@ -100,6 +102,7 @@ public class GameStageInGame extends GameStage {
 			}
 			for(User user : winner.getAliveMembers()){
 				user.setWins(user.getWins() + 1);
+				user.setElo(user.getElo() + 64);
 			}
 			Bukkit.broadcastMessage("");
 			Bukkit.broadcastMessage(ChatColor.GOLD + winName + " has won the war!");

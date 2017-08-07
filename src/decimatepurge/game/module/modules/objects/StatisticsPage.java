@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import decimatepurge.core.Purge;
 import decimatepurge.user.Division;
 import decimatepurge.user.User;
+import decimatepurge.user.UserLoadDataTask;
 import decimatepurge.utils.ItemFactory;
 import decimatepurge.utils.TimeFormatUtils;
 
@@ -31,19 +32,28 @@ public class StatisticsPage {
 		this(Purge.getInstance().getUserManager().getUser(player));
 	}
 	
-	public StatisticsPage(User user){
-		this.name = user.getName();
-		kills = user.getTotalKills();
-		deaths = user.getTotalDeaths();
-		wins = user.getWins();
-		if(user.getTotalDeaths() != 0){
-			kd = user.getTotalKills()/(double)user.getTotalDeaths();
+	public StatisticsPage(String name, int kills, int deaths, int wins, double elo, int gamesPlayed, long playtime){
+		this.name = name;
+		this.kills = kills;
+		this.deaths = deaths;
+		this.wins = wins;
+		if(deaths != 0){
+			kd = kills/(double)deaths;
 		}else{
-			kd = user.getTotalKills();
+			kd = kills;
 		}
-		elo = user.getElo();
-		gamesPlayed = user.getGamesPlayed();
-		playtime = user.getPlaytime();
+		this.elo = elo;
+		this.gamesPlayed = gamesPlayed;
+		this.playtime = playtime;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public StatisticsPage(Player toDisplay, String name){
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(Purge.getInstance(), new UserLoadDataTask(toDisplay, name));
+	}
+	
+	public StatisticsPage(User user){
+		this(user.getName(), user.getTotalKills(), user.getTotalDeaths(), user.getWins(), user.getElo(), user.getGamesPlayed(), user.getPlaytime());
 	}
 	
 	public void display(Player player){

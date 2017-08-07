@@ -1,6 +1,7 @@
 package decimatepurge.game.module.modules.objects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -95,6 +96,9 @@ public class SpawnGear {
 			if(item.getItemType().equals(type) && item.getCost() < points){
 				result.add(item);
 			}
+		}
+		if(result.size() > 5 && !type.equals(GearItemType.MISC)){
+			result = Arrays.asList(result.get(result.size() - 1), result.get(result.size() - 2), result.get(result.size() - 3), result.get(result.size() - 4), result.get(result.size() - 5));
 		}
 		return result;
 	}

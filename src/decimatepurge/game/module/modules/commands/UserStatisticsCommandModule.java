@@ -35,7 +35,8 @@ public class UserStatisticsCommandModule extends SimplePlayerCommandModule {
 			if(user != null){
 				new StatisticsPage(user).display(player);
 			}else{
-				player.sendMessage(ChatColor.RED + "Could not find player " + args[0] + "!");
+				player.sendMessage(ChatColor.YELLOW + "Loading statistics from database...");
+				new StatisticsPage(player, args[0]);
 			}
 		}
 	}

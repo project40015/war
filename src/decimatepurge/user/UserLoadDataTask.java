@@ -3,12 +3,16 @@ package decimatepurge.user;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import decimatepurge.core.Purge;
+import decimatepurge.game.module.modules.objects.StatisticsPage;
 
 public class UserLoadDataTask extends BukkitRunnable {
 
+	private Player toDisplay;
 	private String name;
 	private User user;
 	
@@ -16,7 +20,8 @@ public class UserLoadDataTask extends BukkitRunnable {
 		this.user = user;
 	}
 	
-	public UserLoadDataTask(String name){
+	public UserLoadDataTask(Player toDisplay, String name){
+		this.toDisplay = toDisplay;
 		this.name = name;
 	}
 	
@@ -33,6 +38,14 @@ public class UserLoadDataTask extends BukkitRunnable {
 				statement.setString(1, name);
 			}
 			ResultSet resultSet = statement.executeQuery();
+			if(user == null){
+				if(resultSet.next()){
+					new StatisticsPage(resultSet.getString("name"), resultSet.getInt("kills"), resultSet.getInt("deaths"), resultSet.getInt("wins"), resultSet.getDouble("elo"), resultSet.getInt("gamesPlayed"), resultSet.getLong("playTime")).display(this.toDisplay);;
+				}else{
+					toDisplay.sendMessage(ChatColor.RED + "Could not find user " + ChatColor.YELLOW + "\"" + name + "\"" + ChatColor.RED + "!");
+				}
+				return;
+			}
 			if(resultSet.next()){
 				if(user != null){
 					user.setTotalKills(resultSet.getInt("kills"));
@@ -41,8 +54,6 @@ public class UserLoadDataTask extends BukkitRunnable {
 					user.setPlayTime(resultSet.getLong("playTime"));
 					user.setGamesPlayed(resultSet.getInt("gamesPlayed"));
 					user.setElo(resultSet.getDouble("elo"));
-				}else{
-					//TODO send player the information ...
 				}
 			}else{
 				PreparedStatement ps = Purge.getInstance().getConnection().prepareStatement(

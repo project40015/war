@@ -71,8 +71,8 @@ public class SpawnGearModule extends Module {
 		//Fire res for 3:00
 		this.items.add(new SpawnGearItem(GearItemType.MISC, 15, new ItemStack(Material.POTION, 1, (short) 8195)));
 		this.items.add(new SpawnGearItem(GearItemType.MISC, 15, new ItemStack(Material.ENDER_PEARL)));
-		this.items.add(new SpawnGearItem(GearItemType.MISC, 10, new ItemStack(Material.FLINT_AND_STEEL)));
-		this.items.add(new SpawnGearItem(GearItemType.MISC, 15, new ItemStack(Material.WEB, 4)));
+		this.items.add(new SpawnGearItem(GearItemType.MISC, 15, new ItemStack(Material.FLINT_AND_STEEL)));
+		this.items.add(new SpawnGearItem(GearItemType.MISC, 10, new ItemStack(Material.WEB, 4)));
 		this.items.add(new SpawnGearItem(GearItemType.MISC, 5, new ItemStack(Material.WATER_BUCKET)));
 		this.items.add(new SpawnGearItem(GearItemType.MISC, 8, new ItemStack(Material.FISHING_ROD)));
 		this.items.add(new SpawnGearItem(GearItemType.MISC, 5, new ItemStack(Material.GOLDEN_APPLE, 2)));
